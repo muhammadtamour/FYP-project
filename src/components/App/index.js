@@ -18,6 +18,9 @@ const App = () => (
 
                 <Route path={ROUTES.HOME} component={Home} />
                 {/* <Home /> */}
+
+                <Route path={ROUTES.USER_FORMS} component={Home} />
+                {/* <Home /> */}
             </Switch>
         </Router >
     </AuthUserContext.Provider>

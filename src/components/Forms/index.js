@@ -4,38 +4,22 @@ import { withAuthorization, AuthUserContext } from '../Session';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
-class Home extends Component {
+class Forms extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            currentEmal: '',
-            users: [],
-        };
+            cardForms: [],
+            applicationForms: [],
+        }
     }
 
     componentDidMount() {
-        this.props.firebase.users().onSnapshot(snapshot => {
-            var tempUsers = [];
 
-            snapshot.docs.map(doc => {
-                tempUsers.push({
-                    id: doc.id,
-                    name: doc.get('name'),
-                    email: doc.get('email'),
-                    status: doc.get('status'),
-                });
-            })
-
-            this.setState({
-                users: tempUsers,
-            })
-
-            console.log(this.state.users);
-        });
     }
 
     render() {
+        const { cardForms, applicationForms } = this.state;
 
         return (
             <AuthUserContext.Consumer>
@@ -122,7 +106,7 @@ class Home extends Component {
                                             <div className="pull-right hidden-xs">
                                                 <ol className="breadcrumb">
                                                     <li>
-                                                        <a href="index.html"><i className="fa fa-home" />Home</a>
+                                                        <a href="index.html"><i className="fa fa-home" />Forms</a>
                                                     </li>
                                                     <li className="active">
                                                         <strong>Dashboard</strong>
@@ -136,7 +120,34 @@ class Home extends Component {
                                     <div className="col-lg-12">
                                         <section className="box ">
                                             <header className="panel_header">
-                                                <h2 className="title pull-left">New User Requests</h2>
+                                                <h2 className="title pull-left">Card Forms</h2>
+                                            </header>
+                                            <div className="content-body">    <div className="row">
+                                                <div className="col-xs-12">
+                                                    <div className="table-responsive">
+                                                        <table className="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Number</th>
+                                                                    <th>Expiry</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <CardList cards={this.state.users} />
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    {/* MAIN CONTENT AREA ENDS */}
+
+                                    {/* MAIN CONTENT AREA STARTS */}
+                                    <div className="col-lg-12">
+                                        <section className="box ">
+                                            <header className="panel_header">
+                                                <h2 className="title pull-left">Application Forms</h2>
                                             </header>
                                             <div className="content-body">    <div className="row">
                                                 <div className="col-xs-12">
@@ -157,7 +168,7 @@ class Home extends Component {
                                             </div>
                                         </section>
                                     </div>
-                                    {/* MAIN CONTENT AREA ENDS */}
+                                    {/* MAIN CONTENT AREA ENDS */}§
                                 </section>
                             </section>
                             {/* END CONTENT */}
@@ -169,7 +180,7 @@ class Home extends Component {
     }
 }
 
-const UserList = (props) => (
+const CardList = (props) => (
     <tbody>
         {
             props.users.map(user => (
@@ -185,79 +196,6 @@ const UserList = (props) => (
     </tbody>
 );
 
-class UserListFormBase extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            status: props.status,
-            id: props.userId,
-        }
-    }
-
-    onClickReject = event => {
-        event.preventDefault();
-
-        this.props.firebase.updateNegativeStatus(this.state.id).then(() => {
-            this.setState({
-                status: false,
-            })
-        });
-    }
-
-    onClickAccept = event => {
-        event.preventDefault();
-
-        this.props.firebase.updatePositiveStatus(this.state.id).then(() => {
-            this.setState({
-                status: true,
-            })
-        });
-    }
-
-    render() {
-        const { status } = this.state;
-
-        if (status) {
-            return (
-                <button type="button" onClick={this.onClickReject} className="btn btn-primary"><i className="fa fa-close " /></button>
-            );
-        } else {
-            return (
-                <button type="button" onClick={this.onClickAccept} className="btn btn-primary"><i className="fa fa-check" /></button>
-            );
-        }
-    }
-}
-
-const UserListForm = withFirebase(UserListFormBase);
-
-export { UserListForm };
-
-
-class SignOutFormBase extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    signOutAttempt = event => {
-        event.preventDefault();
-        this.props.firebase.doSignOut();
-    }
-
-    render() {
-        return (
-            <a onClick={this.signOutAttempt}>
-                <i className="fa fa-lock" />Logout
-            </a>
-        );
-    }
-}
-
-const SignOutForm = withFirebase(SignOutFormBase);
-
 const condition = authUser => !!authUser;
 
 export default withAuthorization(condition)(Home);
-
-export { SignOutForm };

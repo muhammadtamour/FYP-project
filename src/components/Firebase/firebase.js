@@ -27,6 +27,28 @@ class Firebase {
     doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
 
     users = () => this.firestore.collection("Users");
+
+    cardForms = () => this.firestore.collection("Card");
+
+    applicationForms = () => this.firestore.collection("Application");
+
+    updatePositiveStatus = id => {
+        return this.firestore.collection("Users").doc(id).update({
+            status: true,
+        });
+    }
+
+    updateNegativeStatus = id => {
+        return this.firestore.collection("Users").doc(id).update({
+            status: false,
+        });
+    }
+
+    getEmail = (id) => {
+        this.firestore.collection("Users").doc(this.auth.currentUser.uid).get().then(snapShot => {
+            return snapShot.get('email');
+        });
+    }
 }
 
 export default Firebase;
