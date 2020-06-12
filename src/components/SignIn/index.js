@@ -2,18 +2,19 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import Firebase, { withFirebase } from '../Firebase';
+import { withFirebase } from '../Firebase';
+import { withAuthorization } from '../Session';
 import * as ROUTES from '../../constants/routes';
 
 const SignIn = () => (
     <div className="container-fluid">
         <div className="login-wrapper row">
             <div id="login" className="login loginpage col-lg-offset-4 col-md-offset-3 col-sm-offset-3 col-xs-offset-0 col-xs-12 col-sm-6 col-lg-4">
-                <h1><a href="#" title="Login Page" tabIndex={-1}>ARES BJJ</a></h1>
+                <h1><a href={ROUTES.SIGN_IN} title="Login Page" tabIndex={-1}>ARES BJJ</a></h1>
                 <SignInForm />
-                <p id="nav">
+                {/* <p id="nav">
                     <a className="pull-left" href="#" title="Password Lost and Found" style={{ color: '#cecccf' }} />
-                </p>
+                </p> */}
             </div>
         </div>
     </div >
